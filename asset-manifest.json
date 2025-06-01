@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/houseExp/static/css/main.08a5eb20.css",
+    "main.js": "/houseExp/static/js/main.8f6a1682.js",
+    "static/js/453.b354f9c1.chunk.js": "/houseExp/static/js/453.b354f9c1.chunk.js",
+    "index.html": "/houseExp/index.html",
+    "main.08a5eb20.css.map": "/houseExp/static/css/main.08a5eb20.css.map",
+    "main.8f6a1682.js.map": "/houseExp/static/js/main.8f6a1682.js.map",
+    "453.b354f9c1.chunk.js.map": "/houseExp/static/js/453.b354f9c1.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.08a5eb20.css",
+    "static/js/main.8f6a1682.js"
+  ]
+}
