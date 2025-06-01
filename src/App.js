@@ -6,12 +6,16 @@ import ExpenseTable from "./components/ExpenseTable";
 import Charts from "./components/Charts";
 import DarkModeToggle from "./components/DarkModeToggle";
 import RefreshButton from "./components/RefreshButton";
+import PinPrompt from "./components/PinPrompt";
 
 const ALLOCATED_AMOUNT = 2485000;
 
 function App() {
   const [expenses, setExpenses] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [isVerified, setIsVerified] = useState(
+    localStorage.getItem("pin_verified") === "true"
+  );
   const [filters, setFilters] = useState({
     dateFrom: "",
     dateTo: "",
@@ -21,14 +25,21 @@ function App() {
     paidTo: "",
   });
   const [darkMode, setDarkMode] = useState(true);
+  const [error, setError] = useState("");
 
-  // Fetch data function
   const fetchData = () => {
     setLoading(true);
-    fetch(process.env.REACT_APP_GOOGLE_SHEET_URL)
+    const url = `https://script.google.com/macros/s/AKfycbwfIPkOJ7x5haIHSaDSfHTv2L5-cdDVReTNDnHp-wbR7oiKWgFNJDLDGinc_Bq5vWnPSQ/exec`;
+
+    fetch(url)
       .then((res) => res.json())
       .then((data) => {
-        // Parse date strings into ISO format (assuming dd/MM/yyyy in sheet)
+        if (data.error) {
+          setError("Invalid PIN. Please try again.");
+          setLoading(false);
+          return;
+        }
+
         const parsedData = data.map((item) => ({
           ...item,
           Date: item.Date,
@@ -39,27 +50,17 @@ function App() {
       })
       .catch((err) => {
         console.error("Fetch error:", err);
+        setError("Error fetching data");
         setLoading(false);
       });
   };
 
-  // Parse dd/MM/yyyy to ISO yyyy-MM-dd
-  function parseDateString(str) {
-    if (!str) return "";
-    const parts = str.split("/");
-    if (parts.length !== 3) return "";
-    const [dd, mm, yyyy] = parts;
-    return `${yyyy}-${mm.padStart(2, "0")}-${dd.padStart(2, "0")}`;
-  }
-
   useEffect(() => {
-    fetchData();
-    // Auto-refresh every 60 seconds
-    // const interval = setInterval(fetchData, 60000);
-    // return () => clearInterval(interval);
-  }, []);
+    if (isVerified) {
+      fetchData();
+    }
+  }, [isVerified]);
 
-  // Filter expenses based on filters
   const filteredExpenses = useMemo(() => {
     return expenses.filter((item) => {
       if (filters.dateFrom && filters.dateTo) {
@@ -96,13 +97,23 @@ function App() {
     });
   }, [expenses, filters]);
 
-  // Calculate totals
   const totalUsed = useMemo(() => {
     return filteredExpenses.reduce((sum, item) => sum + item.Amount, 0);
   }, [filteredExpenses]);
 
+  // ⛔️ Block app until PIN is verified
+  if (!isVerified) {
+    return <PinPrompt onSuccess={() => setIsVerified(true)} />;
+  }
+
   return (
-    <div className={darkMode ? "dark bg-gray-900 text-gray-100 min-h-screen" : "bg-white text-gray-900 min-h-screen"}>
+    <div
+      className={
+        darkMode
+          ? "dark bg-gray-900 text-gray-100 min-h-screen"
+          : "bg-white text-gray-900 min-h-screen"
+      }
+    >
       <div className="max-w-4xl mx-auto p-4">
         <header className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-bold">House Construction Expenses</h1>
@@ -110,10 +121,12 @@ function App() {
         </header>
 
         <StatsSummary allocated={ALLOCATED_AMOUNT} used={totalUsed} />
-
-        <FiltersPanel filters={filters} setFilters={setFilters} expenses={expenses} />
-
-        <RefreshButton onClick={fetchData} loading={loading} />
+        <FiltersPanel
+          filters={filters}
+          setFilters={setFilters}
+          expenses={expenses}
+        />
+        <RefreshButton onClick={() => fetchData()} loading={loading} />
 
         {loading ? (
           <div className="text-center mt-8">Loading data...</div>
