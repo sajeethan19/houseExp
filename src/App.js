@@ -55,8 +55,8 @@ function App() {
   useEffect(() => {
     fetchData();
     // Auto-refresh every 60 seconds
-    const interval = setInterval(fetchData, 60000);
-    return () => clearInterval(interval);
+    // const interval = setInterval(fetchData, 60000);
+    // return () => clearInterval(interval);
   }, []);
 
   // Filter expenses based on filters
