@@ -27,6 +27,8 @@ export default function ExpenseTable({ expenses }) {
                     ) : (
                         expenses.map((exp, i) => (
                             <tr key={i} className="border-t dark:border-gray-600">
+                            {console.log('sss---->',exp)}
+
                                 <td className="px-2 py-1">{exp.Date ? format(parseISO(exp.Date), "dd/MM/yyyy") : ""}</td>
                                 <td className="px-2 py-1">{exp.Description}</td>
                                 <td className="px-2 py-1">{exp["Bill No"]}</td>

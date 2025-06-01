@@ -73,7 +73,7 @@ export default function FiltersPanel({ filters, setFilters, expenses }) {
         </div>
 
         {/* Description */}
-        <div className="sm:col-span-1">
+        {/* <div className="sm:col-span-1">
           <label className="block mb-1 font-medium">Description</label>
           <input
             type="text"
@@ -83,10 +83,10 @@ export default function FiltersPanel({ filters, setFilters, expenses }) {
             placeholder="Search description"
             className="w-full p-2 border rounded dark:bg-gray-700 dark:text-gray-100"
           />
-        </div>
+        </div> */}
 
         {/* Paid To */}
-        <div className="sm:col-span-1">
+        {/* <div className="sm:col-span-1">
           <label className="block mb-1 font-medium">Paid To</label>
           <input
             type="text"
@@ -96,7 +96,7 @@ export default function FiltersPanel({ filters, setFilters, expenses }) {
             placeholder="Search paid to"
             className="w-full p-2 border rounded dark:bg-gray-700 dark:text-gray-100"
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );

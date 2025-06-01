@@ -31,7 +31,7 @@ function App() {
         // Parse date strings into ISO format (assuming dd/MM/yyyy in sheet)
         const parsedData = data.map((item) => ({
           ...item,
-          Date: parseDateString(item.Date),
+          Date: item.Date,
           Amount: Number(item.Amount) || 0,
         }));
         setExpenses(parsedData);
